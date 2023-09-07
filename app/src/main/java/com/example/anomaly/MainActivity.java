@@ -5,22 +5,36 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.TextView;
-
+import android.content.Intent;
 public class MainActivity extends AppCompatActivity {
     private TextView textView;
     private DatabaseManager databaseManager;
+    private notificationHelper notificationHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView=findViewById(R.id.displaytext);
-        databaseManager = new DatabaseManager(this);
+        textView = findViewById(R.id.displaytext);
+        //databaseManager = new DatabaseManager(this);
+        notificationHelper = new notificationHelper(this);
+        if(anomaly_model()) {
+            sendAutomaticNotification();
+        }
     }
+
+
+
+    private void sendAutomaticNotification() {
+        notificationHelper.sendNotification("Automatic Notification", "This notification was sent automatically.");
+    }
+
+
     protected void onResume() {
         super.onResume();
         databaseManager.open();
-        displayData();
+        //displayData();
     }
 
     @Override
@@ -28,25 +42,8 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         databaseManager.close();
     }
-    private void displayData() {
-        Cursor cursor = databaseManager.getAllData();
-        StringBuilder data = new StringBuilder();
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                String timestamp = cursor.getString(cursor.getColumnIndex(DatabaseHelper.TIMESTAMP));
-                int latitude = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.LATITUDE));
-                int longitude = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.LONGITUDE));
-                int speed = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.SPEED));
-                int anomaly = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.ANOMALY));
-
-                data.append("TIMESTAMP: ").append(timestamp).append(", LATITUDE ").append(latitude).append(", SPEED ").append(speed).append(", ANOMALY ").append(anomaly).append("\n");
-
-            } while (cursor.moveToNext());
-        }
-        if (cursor != null) {
-            cursor.close();
-        }
-
-        textView.setText(data.toString());
+    //Machine learning model
+    private boolean anomaly_model(){
+        return true;
     }
 }
