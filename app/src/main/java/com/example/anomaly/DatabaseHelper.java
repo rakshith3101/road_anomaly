@@ -11,6 +11,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Defining the database
     static final String TABLE_NAME="anomaly";
+    static final String id="id";
     static final String TIMESTAMP="timestamp";
     static final String LATITUDE="latitude";
     static final String LONGITUDE="longitude";
@@ -19,16 +20,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     public DatabaseHelper(Context context){
+
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
         String table_query= "CREATE TABLE "+TABLE_NAME+ " (" +
+                id + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 TIMESTAMP+ " VARCHAR, " +
                 LATITUDE + " DOUBLE, " +
                 LONGITUDE + "DOUBLE," +
                 SPEED + "FLOAT," +
-                ANOMALY + "TEXT)";
+                ANOMALY + "INT);";
         db.execSQL(table_query);
     }
 
